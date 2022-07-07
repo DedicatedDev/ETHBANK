@@ -33,8 +33,17 @@
     "typescript": "^4.7.4"
   },
   "scripts": {
+    "node": "hardhat node",
     "build": "hardhat compile",
-    "test": "hardhat test"
+    "test": "hardhat test",
+    "deploy:localhost": "hardhat run --network localhost scripts/deploy.ts",
+    "deploy:rinkeby": "hardhat run --network rinkeby scripts/deploy.ts",
+    "deploy:kovan": "hardhat run --network kovan scripts/deploy.ts",
+    "deploy:goerli": "hardhat run --network goerli scripts/deploy.ts",
+    "upgrade:localhost": "hardhat run --network localhost scripts/upgrade.ts",
+    "upgrade:rinkeby": "hardhat run --network rinkeby scripts/upgrade.ts",
+    "upgrade:kovan": "hardhat run --network kovan scripts/upgrade.ts",
+    "upgrade:goerli": "hardhat run --network goerli scripts/upgrade.ts"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.7.0",
