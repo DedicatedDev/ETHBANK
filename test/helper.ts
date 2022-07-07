@@ -1,3 +1,4 @@
+import { Contract, ContractFactory } from "ethers";
 import { ethers, upgrades } from "hardhat";
 import { EthBank, IERC20Upgradeable, MockERC20 } from "../typechain";
 
@@ -13,6 +14,17 @@ export async function deployBankContract(admin: string): Promise<EthBank> {
   return await etherBank.deployed();
 }
 
+export async function upgradeContract(
+  originalContract: Contract,
+  targetContractFactory: ContractFactory
+): Promise<Contract> {
+  const newEthBank = await upgrades.upgradeProxy(
+    originalContract,
+    targetContractFactory
+  );
+  return newEthBank;
+}
+
 export async function deployERC20Contract(
   name: string,
   symbol: string
@@ -21,5 +33,3 @@ export async function deployERC20Contract(
   const erc20Token = await tokenFactory.deploy(name, symbol);
   return await erc20Token.deployed();
 }
-
-
