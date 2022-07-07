@@ -12,4 +12,11 @@ interface IEthBank {
         address indexed token,
         uint256 amount
     );
+
+    event EthBankTransfer(
+        address indexed from,
+        address indexed to,
+        address indexed token,
+        uint256 amount
+    );
 }

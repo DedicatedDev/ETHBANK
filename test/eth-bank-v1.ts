@@ -151,12 +151,12 @@ describe("ETHBankV1", () => {
         Withdraw
       */
       await expect(
-        etherBank.connect(user1).withdraw(depositAmount.add(10))
-      ).to.be.revertedWith("ETHBANK: Not enough balance");
-
-      await expect(etherBank.connect(user1).withdraw(0)).to.be.revertedWith(
-        "ETHBANK: Amount must be greater than 0"
-      );
+        etherBank
+          .connect(user1)
+          .withdrawERC20(mockDAIToken.address, depositAmount)
+      )
+        .to.be.emit(etherBank, "Withdraw")
+        .withArgs(user1.address, mockDAIToken.address, depositAmount);
     });
 
     it("Should reject to withdraw ERC20 Token from contract with the invalid amount", async () => {
@@ -205,21 +205,7 @@ describe("ETHBankV1", () => {
           .depositERC20(mockDAIToken.address, testDepositAmount)
       ).to.be.revertedWith("Pausable: paused");
     });
-
-    it("Should pause withdraw", async () => {
-      await etherBank.pause();
-      /*
-        Withdraw
-      */
-      await expect(
-        etherBank.connect(user1).withdraw(testDepositAmount)
-      ).to.be.revertedWith("Pausable: paused");
-
-      await expect(
-        etherBank
-          .connect(user1)
-          .withdrawERC20(mockDAIToken.address, testDepositAmount)
-      ).to.be.revertedWith("Pausable: paused");
-    });
   });
+  
+
 });

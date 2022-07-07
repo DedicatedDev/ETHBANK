@@ -46,7 +46,10 @@ contract EthBank is UUPSUpgradeable, EthBankStroage, IEthBank {
         IERC20Upgradeable _erc20Token = IERC20Upgradeable(token);
         uint256 allowance = _erc20Token.allowance(owner, address(this));
         require(allowance >= amount, "ETHBANK: Not enough allowance");
-        require(_erc20Token.transferFrom(msg.sender, address(this), amount));
+        require(
+            _erc20Token.transferFrom(msg.sender, address(this), amount),
+            "ETHBANK: Transfer failed"
+        );
         balances_[owner][token] += amount;
     }
 
@@ -54,7 +57,6 @@ contract EthBank is UUPSUpgradeable, EthBankStroage, IEthBank {
         external
         payable
         onlyValidAmount(amount)
-        whenNotPaused
         nonReentrant
     {
         require(
@@ -68,16 +70,15 @@ contract EthBank is UUPSUpgradeable, EthBankStroage, IEthBank {
     function withdrawERC20(address token, uint256 amount)
         external
         onlyValidAmount(amount)
-        whenNotPaused
         nonReentrant
     {
         require(
             balances_[msg.sender][token] >= amount,
             "ETHBANK: Not enough balance"
         );
+        console.log("withdrawERC20", balances_[msg.sender][token]);
         IERC20Upgradeable _erc20Token = IERC20Upgradeable(token);
-        _erc20Token.approve(address(this), amount);
-        _erc20Token.transferFrom(address(this), msg.sender, amount);
+        _erc20Token.transfer(msg.sender, amount);
         emit Withdraw(msg.sender, token, amount);
     }
 
